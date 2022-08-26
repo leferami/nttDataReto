@@ -1,0 +1,32 @@
+.margen-div {
+    margin-top: 5%;
+}
+
+
+.padding-opc {
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
+.slider-alg{
+    align-self: center;
+    margin: 5px;
+}
+
+.margen-form{
+    margin: 5px;
+}
+
+.margen-form-b{
+    margin: 5px;
+    text-align: center;
+}
+
+.cebecera{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.estilo-columna {
+    text-align: center !important;
+}

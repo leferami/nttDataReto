@@ -1,0 +1,160 @@
+<p-toast [baseZIndex]="5000" [key]="ID">
+   <ng-template let-message pTemplate="message">
+     <div class="p-flex p-flex-column" style="flex: 1">
+       <div class="p-text-center">
+         <h5 class="cebecera">{{message.summary}}</h5>
+         <p>{{message.detail}}</p>
+       </div>
+     </div>
+   </ng-template>
+ </p-toast>
+
+<div class="container margen-div">
+    <h5>Listado de Pokemón</h5>
+    <div class="row justify-content-center">      
+      <div class="col-5">
+         <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" (keyup)="buscar($event)" pInputText placeholder="Buscar" />
+         </span>
+      </div>
+
+      <div class="col-3" style="text-align: end;">
+         <p-button label="Agregar" icon="pi pi-plus" iconPos="left" (click)="nuevo()"></p-button>
+      
+      </div>
+      <div class="col-8 padding-opc">
+         <p-table #dtPokemon [value]="listaPokemon" [paginator]="true" [totalRecords]="listaPokemon.length" [first]="first"
+            [showCurrentPageReport]="true" styleClass="p-datatable-sm p-datatable-gridlines" [loading]="loading"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" [rowsPerPageOptions]="[5,10,20,30]"
+            [rows]="rows"  [responsive]="true">
+
+            <ng-template pTemplate="header">
+               <tr>
+                  <th scope="col" class="estilo-columna">
+                     Nombre
+                  </th>
+                  <th scope="col" class="estilo-columna">
+                     Imagen
+                  </th>
+                  <th scope="col" class="estilo-columna">
+                     Ataque
+                  </th>
+                  <th scope="col" class="estilo-columna">
+                     Defensa
+                  </th>
+                  <th scope="col" class="estilo-columna">
+                     Acciones
+                  </th>
+               </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pok let-rowIndex="rowIndex">
+               <tr>
+                  <td class="estilo-columna">
+                     {{pok.name}}
+                  </td>
+                  <td class="estilo-columna">
+                     <img [src]="pok.image" [alt]="pok.name" width="60" class="shadow-4" />
+                  </td>
+                  <td class="estilo-columna">
+                     {{pok.attack}}
+                  </td>
+                  <td class="estilo-columna">
+                     {{pok.defense}}
+                  </td>
+                  <td class="estilo-columna">                     
+                     <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-text" (click)="EditaRetail(pok)"></button>
+                     <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-help p-button-text" (click)="mostrarDialogConfirmacion(pok)"></button>
+                  </td>
+               </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                  <tr>
+                  <td colspan="5">No existen registros.</td>
+                  </tr>
+               </ng-template>
+         </p-table>
+      </div>
+   </div>
+</div>
+
+
+<p-dialog header="{{bandera == true ? 'Nuevo Pokemón' : 'Editar Pokemón' }}" [(visible)]="displayModal" [closable]="false" *ngIf="displayModal"
+[modal]="true" [style]="{width: '60vw'}" [draggable]="false" [resizable]="false">
+
+   <form [formGroup]="formPokemon">
+      <div class="row justify-content-center">
+         <div class="col-5 margen-form">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" pInputText class="form-control" formControlName ="name">
+               
+            <div *ngIf="formPokemon.get('name')!.dirty && 
+               formPokemon.get('name')!.invalid">
+               <small *ngIf="formPokemon.get('name')!.errors?.['required']">
+                  Campo requerido*
+               </small>
+            </div>
+         </div>
+         <div class="col-5 slider-alg">
+            <h6>Ataque: {{formPokemon.get('attack')?.value}}</h6>
+               <p-slider formControlName="attack"></p-slider>
+              
+            <div *ngIf="formPokemon.get('attack')!.dirty && 
+               formPokemon.get('attack')!.invalid">
+               <small *ngIf="formPokemon.get('attack')!.errors?.['min']">
+                  Campo requerido*
+               </small>
+            </div>
+         </div>
+         <div class="col-5 margen-form">
+            <label for="type">Tipo</label>
+            <input type="text" id="type" pInputText class="form-control" formControlName ="type" >
+             
+            <div *ngIf="formPokemon.get('type')!.dirty && 
+               formPokemon.get('type')!.invalid">
+               <small *ngIf="formPokemon.get('type')!.errors?.['required']">
+                  Campo requerido*
+               </small>
+            </div>
+         </div>
+         <div class="col-5 slider-alg">
+            <h6>Defensa: {{formPokemon.get('defense')?.value}}</h6>
+            <p-slider formControlName="defense"></p-slider>
+            <div *ngIf="formPokemon.get('defense')!.dirty && 
+               formPokemon.get('defense')!.invalid">
+               <small *ngIf="formPokemon.get('defense')!.errors?.['min']">
+                  Campo requerido*
+               </small>
+            </div>
+         </div>
+         <div class="col-10 margen-form">
+            <label for="image">Imagen</label>
+            <input type="text" id="image" pInputText class="form-control" formControlName ="image" >
+             
+            <div *ngIf="formPokemon.get('image')!.dirty && 
+               formPokemon.get('image')!.invalid">
+               <small *ngIf="formPokemon.get('image')!.errors?.['required']">
+                  Campo requerido*
+               </small>
+            </div>
+         </div>
+         <div class="col-5 margen-form-b">
+            <p-button label=" {{bandera == false ? 'Actualizar': 'Guardar'}}" icon="pi pi-save" iconPos="left" [disabled]="formPokemon.invalid" (onClick)="crearModificaPokemon()"></p-button>
+         </div>
+         <div class="col-5 margen-form-b">
+            <p-button label="Cancelar" icon="pi pi-times" iconPos="left" (onClick)="cancelar()"></p-button>
+         </div>
+      </div>
+   </form>
+</p-dialog>
+
+
+<p-confirmDialog key="elimiPokemon" #cd header="Confirmation" icon="pi pi-exclamation-triangle">
+   <p-footer>
+     <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
+     <button type="button" pButton icon="pi pi-check" label="Si" (click)="cd.accept();"
+       class="p-button-danger"></button>
+   </p-footer>
+ </p-confirmDialog>
+
+
